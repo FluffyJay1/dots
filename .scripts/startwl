@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# allow xdg-open on links to work with an already open Firefox instance
+# https://bugzilla.mozilla.org/show_bug.cgi?id=1589251
+export $(dbus-launch)
+
+dwl -s wlinit.sh

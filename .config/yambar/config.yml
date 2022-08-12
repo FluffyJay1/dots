@@ -1,0 +1,313 @@
+# TODO: replace alsa with pulseaudio when support arrives
+# note: this script is for >yambar-1.8.0 (using yambar-9999 as of 7/26/22)
+# since this uses the new map syntax
+# used with dwl, udiskctl, pavucontorl-qt
+icon: &icon {font: LiterationSans NF-22:spacing=90, margin: 4}
+iconfa: &iconfa {font: "Font Awesome 5 Free-18:style=Regular", margin: 4} # i'm so fucking done with font icons
+occupied: &occupied {foreground: ccddffff, margin: 4}
+focused: &focused {foreground: 30cca0ff, margin: 4, deco: {underline: {color: 30cca0ff, size: 2}}}
+empty: &empty {foreground: 424850ff, margin: 4}
+warning: &warning {foreground: fae9beff}
+seriouswarning: &seriouswarning {foreground: fabed1ff}
+
+modulestyle: &modulestyle
+  left-margin: 10
+  right-margin: 10
+  deco:
+    stack:
+      - background: {color: 202830ff }
+      - border: {color: 13161cff, size: 2 }
+
+bar:
+  height: 28
+  location: bottom
+  background: 0a0f1400 # lol
+  font: monospace-14
+  foreground: 838a90ff
+  spacing: 4
+  border:
+    left-margin: 8
+    right-margin: 8
+    bottom-margin: 8
+
+  left:
+    - script:
+        path: /home/fluffyjay1/.scripts/dwl-tags.sh
+        args: [1]
+        content:
+          list:
+            margin: 10
+            <<: *modulestyle
+            items:
+              # the next 108 lines were generated with :r!yamconftags.sh
+              - map:
+                  conditions:
+                    tag_0_occupied:
+                      map:
+                        conditions:
+                          tag_0_focused: {string: {text: "{tag_0}", <<: *focused}}
+                          ~tag_0_focused: {string: {text: "{tag_0}", <<: *occupied}}
+                    ~tag_0_occupied:
+                      map:
+                        conditions:
+                          tag_0_focused: {string: {text: "{tag_0}", <<: *focused}}
+                          ~tag_0_focused: {string: {text: "{tag_0}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_1_occupied:
+                      map:
+                        conditions:
+                          tag_1_focused: {string: {text: "{tag_1}", <<: *focused}}
+                          ~tag_1_focused: {string: {text: "{tag_1}", <<: *occupied}}
+                    ~tag_1_occupied:
+                      map:
+                        conditions:
+                          tag_1_focused: {string: {text: "{tag_1}", <<: *focused}}
+                          ~tag_1_focused: {string: {text: "{tag_1}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_2_occupied:
+                      map:
+                        conditions:
+                          tag_2_focused: {string: {text: "{tag_2}", <<: *focused}}
+                          ~tag_2_focused: {string: {text: "{tag_2}", <<: *occupied}}
+                    ~tag_2_occupied:
+                      map:
+                        conditions:
+                          tag_2_focused: {string: {text: "{tag_2}", <<: *focused}}
+                          ~tag_2_focused: {string: {text: "{tag_2}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_3_occupied:
+                      map:
+                        conditions:
+                          tag_3_focused: {string: {text: "{tag_3}", <<: *focused}}
+                          ~tag_3_focused: {string: {text: "{tag_3}", <<: *occupied}}
+                    ~tag_3_occupied:
+                      map:
+                        conditions:
+                          tag_3_focused: {string: {text: "{tag_3}", <<: *focused}}
+                          ~tag_3_focused: {string: {text: "{tag_3}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_4_occupied:
+                      map:
+                        conditions:
+                          tag_4_focused: {string: {text: "{tag_4}", <<: *focused}}
+                          ~tag_4_focused: {string: {text: "{tag_4}", <<: *occupied}}
+                    ~tag_4_occupied:
+                      map:
+                        conditions:
+                          tag_4_focused: {string: {text: "{tag_4}", <<: *focused}}
+                          ~tag_4_focused: {string: {text: "{tag_4}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_5_occupied:
+                      map:
+                        conditions:
+                          tag_5_focused: {string: {text: "{tag_5}", <<: *focused}}
+                          ~tag_5_focused: {string: {text: "{tag_5}", <<: *occupied}}
+                    ~tag_5_occupied:
+                      map:
+                        conditions:
+                          tag_5_focused: {string: {text: "{tag_5}", <<: *focused}}
+                          ~tag_5_focused: {string: {text: "{tag_5}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_6_occupied:
+                      map:
+                        conditions:
+                          tag_6_focused: {string: {text: "{tag_6}", <<: *focused}}
+                          ~tag_6_focused: {string: {text: "{tag_6}", <<: *occupied}}
+                    ~tag_6_occupied:
+                      map:
+                        conditions:
+                          tag_6_focused: {string: {text: "{tag_6}", <<: *focused}}
+                          ~tag_6_focused: {string: {text: "{tag_6}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_7_occupied:
+                      map:
+                        conditions:
+                          tag_7_focused: {string: {text: "{tag_7}", <<: *focused}}
+                          ~tag_7_focused: {string: {text: "{tag_7}", <<: *occupied}}
+                    ~tag_7_occupied:
+                      map:
+                        conditions:
+                          tag_7_focused: {string: {text: "{tag_7}", <<: *focused}}
+                          ~tag_7_focused: {string: {text: "{tag_7}", <<: *empty}}
+              - map:
+                  conditions:
+                    tag_8_occupied:
+                      map:
+                        conditions:
+                          tag_8_focused: {string: {text: "{tag_8}", <<: *focused}}
+                          ~tag_8_focused: {string: {text: "{tag_8}", <<: *occupied}}
+                    ~tag_8_occupied:
+                      map:
+                        conditions:
+                          tag_8_focused: {string: {text: "{tag_8}", <<: *focused}}
+                          ~tag_8_focused: {string: {text: "{tag_8}", <<: *empty}}
+              - list:
+                  spacing: 3
+                  items:
+                      - string: {text: "{layout}"}
+                      - string: {text: "{appid}", max: 40}
+  center:
+    - mem:
+        interval: 5000
+        content:
+          list:
+            <<: *modulestyle
+            items:
+              - string: {text: "",<<: *iconfa}
+              - map:
+                  default: {string: {text: "{percent_used}%"}}
+                  conditions:
+                    percent_used > 90: {string: {text: "{percent_used}% ", <<: *seriouswarning}}
+                    percent_used > 50: {string: {text: "{percent_used}% ", <<: *warning}}
+    - cpu:
+        interval: 2000
+        content:
+          list:
+            <<: *modulestyle
+            items:
+              - string: {text: , <<: *icon}
+              - map:
+                  default: {string: {text: "{cpu}% "}}
+                  conditions:
+                    cpu > 90: {string: {text: "{cpu}% ", <<: *seriouswarning}}
+                    cpu > 50: {string: {text: "{cpu}% ", <<: *warning}}
+    - network:
+        name: wlp2s0
+        poll-interval: 2
+        content:
+          list:
+            <<: *modulestyle
+            items:
+              - map:
+                  default: {string: {text: 睊, <<: *icon}}
+                  conditions:
+                    state == up: {string: {text: 直, <<: *icon}}
+              - map:
+                  default: {string: {text: "{signal}dBm "}}
+                  conditions:
+                    signal < -80: {string: {text: "{signal}dBm ", <<: *seriouswarning}}
+                    signal < -70: {string: {text: "{signal}dBm ", <<: *warning}}
+    - alsa:
+        card: default
+        mixer: Master
+        content:
+          list:
+            <<: *modulestyle
+            on-click: pavucontrol-qt
+            items:
+              - map:
+                  conditions:
+                    muted: {string: {text: ﱝ, <<: *icon}}
+                    ~muted:
+                      - ramp:
+                          tag: percent
+                          items:
+                            - string: {text: 奄, <<: *icon}
+                            - string: {text: 奔, <<: *icon}
+                            - string: {text: 墳, <<: *icon}
+              - string: {text: "{percent}% "}
+    - battery:
+        name: BAT1
+        poll-interval: 120
+        content:
+          list:
+            <<: *modulestyle
+            items:
+              - map:
+                  default:
+                    ramp:
+                      tag: capacity
+                      items:
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                        - string: {text: , <<: *icon}
+                  conditions:
+                    state == full: {string: {text: , <<: *icon}}
+                    state == unknown: {string: {text: , <<: *icon}}
+                    state == charging:
+                      ramp:
+                        tag: capacity
+                        items:
+                          - string: {text: , <<: *icon}
+                          - string: {text: , <<: *icon}
+                          - string: {text: , <<: *icon}
+                          - string: {text: , <<: *icon}
+                          - string: {text: , <<: *icon}
+                          - string: {text: , <<: *icon}
+                          - string: {text: , <<: *icon}
+              - map:
+                  default: {string: {text: "{capacity}% "}}
+                  conditions:
+                    capacity < 5: {string: {text: "{capacity}% ", <<: *seriouswarning}}
+                    capacity < 20: {string: {text: "{capacity}% ", <<: *warning}}
+  right:
+    - removables:
+        spacing: 10
+        content:
+          map:
+            <<: *modulestyle
+            conditions:
+              optical: # must be my huawei phone
+                # TODO: handle more than 1 phone
+                map:
+                  conditions:
+                    ~mounted:
+                      list:
+                        on-click: yammountmtp.sh {device}
+                        items:
+                          - string:
+                              text: 
+                              <<: *icon
+                          - string: {text: "MTPDevice: {device}"}
+                    mounted:
+                      list:
+                        on-click: yamumountmtp.sh {device}
+                        items:
+                          - string:
+                              text: 
+                              <<: *icon
+                          - string: {text: "~/MTPDevice"}
+              ~optical:
+                map:
+                  conditions:
+                    ~mounted:
+                      list:
+                        on-click: udisksctl mount -b {device}
+                        items:
+                          - string:
+                              text: 禍
+                              <<: *icon
+                          - string: {text: "{vendor}, {model}, {optical}, {device}, {label}"}
+                    mounted:
+                      list:
+                        on-click: udisksctl unmount -b {device}
+                        items:
+                          - string:
+                              text: 
+                              <<: *icon
+                          - string: {text: "{mount_point}"}
+    - label:
+        content:
+          string:
+            on-click: lock
+            text: 
+            <<: *modulestyle
+    - clock:
+        time-format: "%H:%M"
+        date-format: "%a %m/%d/%y"
+        content:
+          string: {text: "{date} {time}", <<: *modulestyle}

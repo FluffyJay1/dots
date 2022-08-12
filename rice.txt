@@ -1,0 +1,180 @@
+Goals:
+- Strive for minimalism, be able to understand every part that is installed on
+  the system and the reasoning behind it
+- Prefer new + lean over old + well-supported
+- Less resource usage, especially when idle
+- Customizability, be able to implement the "bioluminescent" theme
+- Look cool :)
+- FUCK NVIDIA
+
+Wayland is used over X because it is newer, it will be the future, it is less
+bloated, and it generally runs better. However, I must admit with great shame
+that I need the aid of XWayland. So far only Steam has needed this exception.
+
+We use nouveau instead of the proprietary drivers not because it's the moral
+thing to do, but because the proprietary drivers just don't work and trying to
+sleep the laptop causes shit to be funky and basically fuck nvidia
+
+I chose to not use a desktop environment precisely because it does everything
+out of the box: it's harder for me to understand the components that make up a
+desktop environment, and why each part is there. By basically building my own
+"desktop environment" I understand what it's like before and after a part is
+installed, so I better understand why it's there. This also helps me cut down
+on bloat and lets me make more customizations.
+
+Programs used:
+- Window manager/compositor: dwl
+  - config: ~/builds/dwl/config.h (edit the source code and build it yourself)
+  - started by executing the script at ~/.scripts/startwl
+  - minimalist and hackable
+  - the dynamic stacking method feels a lot more natural than tree-based
+    methods
+    - creates a nice layer of abstraction between window creation and window
+      placement: just create a window, and it will position accordingly, you
+      don't have to worry about which window you need to split
+    - you can easily assign more space to the window you're working on while
+      preserving your layout
+      - if you want to do work in a window, just promote it to master to make
+        it bigger, while still preserving your overall layout
+      - with tree-based systems you'd have to either 1) cycle your windows
+        until the one you wanted was in the big area, 2) resize your splits
+        until the window was big enough, destroying your carefully crafted
+        layout in the process, or 3) fullscreen the window, but then you can't
+        see the other windows
+- Terminal emulator: foot
+  - config: ~/.config/foot/foot.ini
+  - Advertised as fast and lightweight
+  - currently configured to use server-client mode
+    - server is started in ~/.scripts/startwl
+    - clients started in dwl's config.h, clifm's clifmrc, and fuzzel's fuzzel.ini
+  - Preferred over alacritty because
+    - It is capable of sending ctrl + tab, ctrl + shift + tab, etc.
+    - It has the ability to spawn a new shell with the current working
+      directory with ctrl + shift + n, which is cool
+    - Less resource usage(?)
+- Status bar: yambar
+  - config: ~/.config/yambar/config.yml
+  - config references the script at ~/.scripts/dwl-tags.sh to update tags
+    displayed
+    - hacked to use a named pipe so it can interface with dwl's status output
+  - Advertised as lightweight and efficient
+  - Configurable enough, though not quite as stylizable as waybar (we will
+    settle)
+  - Preferred over waybar because it seems to be more performant? And waybar
+    styling isn't strictly necessary (but it is worth looking into)
+  - Preferred over somebar (dwm bar for dwl) because I couldn't get the
+    patches to work lol
+  - i3status-rust is worth looking into (maybe it's not quite as stylable?)
+- Application launcher: Fuzzel
+  - config: ~/.config/fuzzel/fuzzel.ini
+    - Uses the Papirus icon theme
+  - Fast, also looks nice when stylized
+  - Written by the same guy that made foot and yambar
+  - Preferred over bemenu because
+    - bemenu isn't very graphical
+    - apparently it can be slow?
+  - Preferred over j4-dmenu-desktop because fuzzel looks nicer
+  - Preferred over wofi for some reason, I remember trying wofi and something
+    didn't work out
+- File manager: CliFM
+  - config: ~/.config/clifm/profiles/default
+    - colors config: /usr/share/clifm/colors
+  - Terminal, CLI based
+  - Fast, lightweight, even though it has a lot of features?
+  - I wrote the ebuild for it so I'm invested
+  - Preferred over ranger because ranger "just doesn't work" for some reason
+  - Preferred over nnn because some nnn bindings clash by default, but you
+    can't change nnn bindings
+  - Preferred over fff because fff has some X dependencies for image previewing
+- Desktop notifications: Mako
+  - config: ~/.config/mako/config
+  - Lightweight (well they all say they are) but this one has minimal dependencies
+  - Preferred over Dunst because Dunst's ebuild has a lot of dependencies on X
+    libraries
+  - Honestly this isn't that important
+- Audio: PipeWire
+  - Preferred over PulseAudio
+    - Even though Pipewire tends to use more system resources, it's apparently
+      the future
+- Shell: zsh
+  - config: ~/.zshrc
+    - uses powerlevel10k, config at ~/.p10k.zsh
+      - uses MesloLGS NF, a custom NerdFont from powerlevel10k
+  - Pretty good shell with a lot of features, might not be minimal but we have
+    /usr/sh linked to dash for a less bloated script runner
+  - Preferred over bash because more features
+- Wallpaper: swaybg + azote
+  - Started in ~/.scripts/startwl, configured through azote gui
+  - Simple wallpaper manager, and azote lets us change it while running
+  - Preferred over oguri because
+    - we don't need animated wallpapers
+    - azote doesn't support it
+- Screenlock: swaylock-effects
+  - config: ~/.config/swaylock/config
+  - I know this is the opposite of minimal but it's cool
+
+Resources used:
+- Font: NerdFonts
+  - Terminal uses MesloLGS NF, a custo NerdFont from powerlevel10k
+- Cursor theme: Future-cyan (https://www.opendesktop.org/p/1465392)
+  - installed at ~/.icons/
+  - used in
+    - ~/builds/dwl/config.h
+    - ~/.icons/default/index.theme
+    - ~/.config/gtk-3.0/settings.ini
+      - must be read into gtk via ~/.scripts/import-gsettings or something
+
+(The dotfiles assume NerdFonts is installed, instead of fontawesome)
+
+The "Bioluminescent" theme
+
+A generally blue theme. "Background" colors should be pretty muted, similar in
+hue, slightly blue/cyan, and be used for 90% of the screen. "Foreground"
+colors are bright, may vary in hue, and should only take up maybe 1% of the
+screen. Brightness conveys the importance of items, saturation conveys whether
+the item is active. Or something. Bright + saturated = your focus here pls.
+
+As a suggestion for some common colors
+
+Background: 202830
+Background (dark): 0a0f14
+Background (interactable): 0a1720
+Inactive border: 13161c
+Active (or focused) border: 4588b8
+Activated item: 30cca0 (if not on activated background)
+Activated background: 16624d (if no activated item)
+Selection background: 104080
+
+Text not worth looking at: 424850
+Unimportant text: 838a90
+Text: ccddff
+More important text: ddeeff
+Warning Text: fae9be
+Serious Warning Text: fabed1
+
+Other notes
+- try to write POSIX compliant scripts so they work with /bin/sh -> dash
+  - dash runs much faster
+- on this setup I've remapped capslock to esc (makes vim easier)
+  - i created a "capslock to escape" mapping for tty at
+    /usr/share/keymaps/i386/qwerty/capslock-to-escape.map.gz and configured to
+    use it at /etc/conf.d/keymaps
+  - xkb patch can be found at
+    /etc/portage/patches/x11-misc/xkeyboard-config/capslock-to-esc.patch
+- I'm also using tinynotify-send, however the base implementation only accepts
+  number for urgency level, so I've patched it to accept "low", "normal" and
+  "critical" for urgency level
+  - patch can be found at
+    /etc/portage/patches/x11-libs/libtinynotify-cli/stringurgency.patch
+- some environment variables can be found at /etc/env.d/99local
+- I'm using tuigreet as my greeter, configured to display a fortune at startup
+  - config at /etc/greetd/config.toml
+- I tell powertop to autotune at startup
+  - at /etc/local.d/50powertop.start
+- When running win10 vm under qemu, i've isolated cores 0,2 for the host, and
+  cores 1,3 for the vm, when the vm is rurnning
+  - host isolation configured at /etc/libvirt/hooks/qemu
+  - vm core pinning configured via 'doas virsh edit win10'
+  - i've also fucked with a bunch of different parts of the system trying to
+    get gpu pass through to work and i don't remember exactly what damage i
+    caused lol
