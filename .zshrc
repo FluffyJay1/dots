@@ -12,6 +12,10 @@ promptinit; prompt gentoo
 
 export EDITOR="/usr/bin/nvim"
 
+# when entering visual mode, edit line in vim
+autoload edit-command-line; zle -N edit-command-line
+bindkey -M vicmd v edit-command-line
+
 alias vim="nvim"
 alias doasedit="doas nvim"
 alias itop="doas intel_gpu_top"
@@ -91,3 +95,5 @@ HISTSIZE=10000
 SAVEHIST=20000
 setopt autocd beep nomatch notify
 # End of lines configured by zsh-newuser-install
+
+setopt HIST_IGNORE_SPACE # commands that start with a space don't get saved in the history

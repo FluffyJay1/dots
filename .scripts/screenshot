@@ -3,5 +3,5 @@ export GRIM_DEFAULT_DIR="$HOME/Pictures/Screenshots"
 grim
 # it was probably the most recent file in this folder
 file=${GRIM_DEFAULT_DIR}/$(ls -Art ${GRIM_DEFAULT_DIR} | tail -n 1)
-notify-send -i "${file}" -A "Delete":"rm \"${file}\"" -t 5000 "Screenshot saved" "${file}
+notify-send -i "${file}" -A "Delete":"rm \"${file}\"" -u low -t 5000 "Screenshot saved" "${file}
 (Left click to delete)"

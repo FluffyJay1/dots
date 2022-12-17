@@ -161,11 +161,13 @@ Other notes
     use it at /etc/conf.d/keymaps
   - xkb patch can be found at
     /etc/portage/patches/x11-misc/xkeyboard-config/capslock-to-esc.patch
-- I'm also using tinynotify-send, however the base implementation only accepts
-  number for urgency level, so I've patched it to accept "low", "normal" and
-  "critical" for urgency level
-  - patch can be found at
-    /etc/portage/patches/x11-libs/libtinynotify-cli/stringurgency.patch
+- I have used tinynotify-send in the past, but I've switched to libnotify
+  because mutt-wizard's mail sync cronjob needs the '--app-name' option
+  - for tinynotify-send, the base implementation only accepts number for
+    urgency level, so I've patched it to accept "low", "normal" and "critical"
+    for urgency level
+    - patch can be found at
+      /etc/portage/patches/x11-libs/libtinynotify-cli/stringurgency.patch
 - some environment variables can be found at /etc/env.d/99local
 - I'm using tuigreet as my greeter, configured to display a fortune at startup
   - config at /etc/greetd/config.toml

@@ -1,7 +1,7 @@
 # TODO: replace alsa with pulseaudio when support arrives
 # note: this script is for >yambar-1.8.0 (using yambar-9999 as of 7/26/22)
 # since this uses the new map syntax
-# used with dwl, udiskctl, pavucontorl-qt
+# used with dwl, udiskctl, pavucontrol-qt
 icon: &icon {font: LiterationSans NF-22:spacing=90, margin: 4}
 iconfa: &iconfa {font: "Font Awesome 5 Free-18:style=Regular", margin: 4} # i'm so fucking done with font icons
 occupied: &occupied {foreground: ccddffff, margin: 4}
@@ -153,6 +153,7 @@ bar:
                   items:
                       - string: {text: "{layout}"}
                       - string: {text: "{appid}", max: 40}
+                      - string: {text: "{selmon}", max: 40}
   center:
     - mem:
         interval: 5000
@@ -184,6 +185,7 @@ bar:
         content:
           list:
             <<: *modulestyle
+            on-click: notifynetworkinfo.sh
             items:
               - map:
                   default: {string: {text: 睊, <<: *icon}}

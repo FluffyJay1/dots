@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # dwl-tags.sh - display dwl tags
+# Accepts the output from my fork of dwl (https://github.com/FluffyJay1/dwl)
 #
 # USAGE: dwl-tags.sh 1
 #
@@ -17,6 +18,7 @@
 #  {layout}          string  dwl layout
 #  {title}           string  client title
 #  {appid}           string  client appid
+#  {selmon}          string  selected monitor name
 #
 # Now the fun part
 #
@@ -73,10 +75,11 @@
 
 
 # Variables
-declare output title layout activetags selectedtags appid
+declare output title layout activetags selectedtags appid selmon prevselmon
 declare -a tags name
 # readonly fname="$HOME"/.cache/dwltags
 fname=/tmp/dwl-tags-pipe
+trap 'rm -f "$fname"' exit
 
 _cycle() {
   tags=( "1" "2" "3" "4" "5" "6" "7" "8" "9" )
@@ -89,6 +92,7 @@ _cycle() {
   #  -> return "" "" "" "Media" 5 6 7 8 9)
   name=()
 
+  printf -- '%s\n' "selmon|string|${selmon}"
   for tag in "${!tags[@]}"; do
     mask=$((1<<tag))
 
@@ -102,8 +106,8 @@ _cycle() {
 
     if (( "${selectedtags}" & mask )) 2>/dev/null; then
       printf -- '%s\n' "${tagPrefix}_focused|bool|true"
-      printf -- '%s\n' "title|string|${title}"
-      printf -- '%s\n' "appid|string|${appid}"
+      # printf -- '%s\n' "title|string|${title}" why here
+      # printf -- '%s\n' "appid|string|${appid}"
     else
       printf '%s\n' "${tagPrefix}_focused|bool|false"
     fi
@@ -115,8 +119,16 @@ _cycle() {
     fi
   done
 
+  printf -- '%s\n' "title|string|${title}"
+  printf -- '%s\n' "appid|string|${appid}"
   printf -- '%s\n' "layout|string|${layout}"
   printf -- '%s\n' ""
+
+  # if selected monitor changed, send a notification
+  if [ "$selmon" != "$prevselmon" ]; then
+    notify-send -u low -t 100 "Selected monitor $selmon"
+    prevselmon="$selmon"
+  fi
 
 }
 
@@ -134,36 +146,46 @@ while read output; do
   # debug print
   # printf -- '%s\n' "read ${output} from $fname" >&2
 
-  # after pipe connects, do not allow others to use pipe
-  # a bit hacky but facilitates multiple tty sessions
-  rm -f "${fname}" # the pipe still exists, it's just no longer named
+  # do not remove pipe after it connects
+  # we do not have the need to facilitate multiple tty sessions
+  # rm -f "${fname}" # do not do this, the pipe still exists, it's just no longer named
 
   # Get info from the file
+  [ "$output" = cycle ] && _cycle && continue
   tokens=( $output ) # (MONITOR INFO x)
   case ${tokens[1]} in
+    selmon) # x = SELECTED?1/0
+      selected=${tokens[@]:2}
+      if [ $selected = 1 ]; then
+        selmon=${tokens[0]}
+        isactive=true
+      else
+        isactive=false
+      fi
+      ;;
     title) # x = TITLE_OF_FOCUSED_CLIENT...
+      [ $isactive = true ] || continue
       title=${tokens[@]:2}
       ;;
     appid) # x = APPID_OF_FOCUSED_CLIENT...
+      [ $isactive = true ] || continue
       appid=${tokens[@]:2}
       ;;
     tags) # x = ACTIVE_TAGS SELECTED_TAGS TAGS_OF_FOCUSED_CLIENT URGENT_TAGS
+      [ $isactive = true ] || continue
       activetags=${tokens[2]}
       selectedtags=${tokens[3]}
       ;;
     layout) # x = LAYOUT...
+      [ $isactive = true ] || continue
       layout=${tokens[@]:2}
-      _cycle # layout is always the last thing printed by printstatus
-      ;;
-    selmon) # x = SELECTED?1/0
       ;;
   esac
-
 
 done < $fname
 
 printf -- '%s\n' "exiting dwl-tags.sh" >&2
 
-unset -v output title layout activetags selectedtags
+unset -v output title layout activetags selectedtags selmon
 unset -v tags name
 
