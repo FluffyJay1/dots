@@ -75,7 +75,7 @@
 
 
 # Variables
-declare output title layout activetags selectedtags appid selmon prevselmon
+declare output title layout activetags selectedtags appid selmon
 declare -a tags name
 # readonly fname="$HOME"/.cache/dwltags
 fname=/tmp/dwl-tags-pipe
@@ -123,13 +123,6 @@ _cycle() {
   printf -- '%s\n' "appid|string|${appid}"
   printf -- '%s\n' "layout|string|${layout}"
   printf -- '%s\n' ""
-
-  # if selected monitor changed, send a notification
-  if [ "$selmon" != "$prevselmon" ]; then
-    notify-send -u low -t 100 "Selected monitor $selmon"
-    prevselmon="$selmon"
-  fi
-
 }
 
 # Call the function here so the tags are displayed at dwl launch
