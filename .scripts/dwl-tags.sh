@@ -73,10 +73,12 @@
 #                   - string: {text: "{layout}"}
 #                   - string: {text: "{title}"}
 
-
+monsym='/' # symbol to represent a monitor
 # Variables
 declare output title layout activetags selectedtags appid selmon
 declare -a tags name
+selmonind=0
+nmons=0
 # readonly fname="$HOME"/.cache/dwltags
 fname=/tmp/dwl-tags-pipe
 trap 'rm -f "$fname"' exit
@@ -92,6 +94,7 @@ _cycle() {
   #  -> return "" "" "" "Media" 5 6 7 8 9)
   name=()
 
+  printf -- '%s\n' "nmons|string|$nmons"
   printf -- '%s\n' "selmon|string|${selmon}"
   for tag in "${!tags[@]}"; do
     mask=$((1<<tag))
@@ -119,6 +122,12 @@ _cycle() {
     fi
   done
 
+  pre=$(printf %${selmonind}s | tr " " "$monsym")
+  post=$(printf %$((nmons - selmonind - 1))s | tr " " "$monsym")
+  printf -- '%s\n' "premons|string|$pre"
+  printf -- '%s\n' "monsym|string|$monsym"
+  printf -- '%s\n' "postmons|string|$post"
+
   printf -- '%s\n' "title|string|${title}"
   printf -- '%s\n' "appid|string|${appid}"
   printf -- '%s\n' "layout|string|${layout}"
@@ -144,17 +153,24 @@ while read output; do
   # rm -f "${fname}" # do not do this, the pipe still exists, it's just no longer named
 
   # Get info from the file
-  [ "$output" = cycle ] && _cycle && continue
+  if [ "$output" = cycle ]; then
+    _cycle
+    nmons=0
+    selmonind=0
+    continue
+  fi
   tokens=( $output ) # (MONITOR INFO x)
   case ${tokens[1]} in
     selmon) # x = SELECTED?1/0
       selected=${tokens[@]:2}
       if [ $selected = 1 ]; then
         selmon=${tokens[0]}
+        selmonind=$nmons
         isactive=true
       else
         isactive=false
       fi
+      nmons=$((nmons + 1))
       ;;
     title) # x = TITLE_OF_FOCUSED_CLIENT...
       [ $isactive = true ] || continue

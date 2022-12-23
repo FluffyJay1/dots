@@ -9,6 +9,8 @@ focused: &focused {foreground: 30cca0ff, margin: 4, deco: {underline: {color: 30
 empty: &empty {foreground: 424850ff, margin: 4}
 warning: &warning {foreground: fae9beff}
 seriouswarning: &seriouswarning {foreground: fabed1ff}
+monfocused: &monfocused {foreground: 30cca0ff}
+monunfocused: &monunfocused {foreground: 424850ff}
 
 modulestyle: &modulestyle
   left-margin: 10
@@ -36,124 +38,136 @@ bar:
         args: [1]
         content:
           list:
-            margin: 10
-            <<: *modulestyle
             items:
-              # the next 108 lines were generated with :r!yamconftags.sh
               - map:
                   conditions:
-                    tag_0_occupied:
-                      map:
-                        conditions:
-                          tag_0_focused: {string: {text: "{tag_0}", <<: *focused}}
-                          ~tag_0_focused: {string: {text: "{tag_0}", <<: *occupied}}
-                    ~tag_0_occupied:
-                      map:
-                        conditions:
-                          tag_0_focused: {string: {text: "{tag_0}", <<: *focused}}
-                          ~tag_0_focused: {string: {text: "{tag_0}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_1_occupied:
-                      map:
-                        conditions:
-                          tag_1_focused: {string: {text: "{tag_1}", <<: *focused}}
-                          ~tag_1_focused: {string: {text: "{tag_1}", <<: *occupied}}
-                    ~tag_1_occupied:
-                      map:
-                        conditions:
-                          tag_1_focused: {string: {text: "{tag_1}", <<: *focused}}
-                          ~tag_1_focused: {string: {text: "{tag_1}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_2_occupied:
-                      map:
-                        conditions:
-                          tag_2_focused: {string: {text: "{tag_2}", <<: *focused}}
-                          ~tag_2_focused: {string: {text: "{tag_2}", <<: *occupied}}
-                    ~tag_2_occupied:
-                      map:
-                        conditions:
-                          tag_2_focused: {string: {text: "{tag_2}", <<: *focused}}
-                          ~tag_2_focused: {string: {text: "{tag_2}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_3_occupied:
-                      map:
-                        conditions:
-                          tag_3_focused: {string: {text: "{tag_3}", <<: *focused}}
-                          ~tag_3_focused: {string: {text: "{tag_3}", <<: *occupied}}
-                    ~tag_3_occupied:
-                      map:
-                        conditions:
-                          tag_3_focused: {string: {text: "{tag_3}", <<: *focused}}
-                          ~tag_3_focused: {string: {text: "{tag_3}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_4_occupied:
-                      map:
-                        conditions:
-                          tag_4_focused: {string: {text: "{tag_4}", <<: *focused}}
-                          ~tag_4_focused: {string: {text: "{tag_4}", <<: *occupied}}
-                    ~tag_4_occupied:
-                      map:
-                        conditions:
-                          tag_4_focused: {string: {text: "{tag_4}", <<: *focused}}
-                          ~tag_4_focused: {string: {text: "{tag_4}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_5_occupied:
-                      map:
-                        conditions:
-                          tag_5_focused: {string: {text: "{tag_5}", <<: *focused}}
-                          ~tag_5_focused: {string: {text: "{tag_5}", <<: *occupied}}
-                    ~tag_5_occupied:
-                      map:
-                        conditions:
-                          tag_5_focused: {string: {text: "{tag_5}", <<: *focused}}
-                          ~tag_5_focused: {string: {text: "{tag_5}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_6_occupied:
-                      map:
-                        conditions:
-                          tag_6_focused: {string: {text: "{tag_6}", <<: *focused}}
-                          ~tag_6_focused: {string: {text: "{tag_6}", <<: *occupied}}
-                    ~tag_6_occupied:
-                      map:
-                        conditions:
-                          tag_6_focused: {string: {text: "{tag_6}", <<: *focused}}
-                          ~tag_6_focused: {string: {text: "{tag_6}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_7_occupied:
-                      map:
-                        conditions:
-                          tag_7_focused: {string: {text: "{tag_7}", <<: *focused}}
-                          ~tag_7_focused: {string: {text: "{tag_7}", <<: *occupied}}
-                    ~tag_7_occupied:
-                      map:
-                        conditions:
-                          tag_7_focused: {string: {text: "{tag_7}", <<: *focused}}
-                          ~tag_7_focused: {string: {text: "{tag_7}", <<: *empty}}
-              - map:
-                  conditions:
-                    tag_8_occupied:
-                      map:
-                        conditions:
-                          tag_8_focused: {string: {text: "{tag_8}", <<: *focused}}
-                          ~tag_8_focused: {string: {text: "{tag_8}", <<: *occupied}}
-                    ~tag_8_occupied:
-                      map:
-                        conditions:
-                          tag_8_focused: {string: {text: "{tag_8}", <<: *focused}}
-                          ~tag_8_focused: {string: {text: "{tag_8}", <<: *empty}}
+                    nmons > 1:
+                      list:
+                        spacing: 0
+                        <<: *modulestyle
+                        items:
+                          - string: {text: "{premons}", <<: *monunfocused}
+                          - string: {text: "{monsym}", <<: *monfocused}
+                          - string: {text: "{postmons}", <<: *monunfocused}
               - list:
-                  spacing: 3
+                  margin: 10
+                  <<: *modulestyle
                   items:
-                      - string: {text: "{layout}"}
-                      - string: {text: "{appid}", max: 40}
-                      - string: {text: "{selmon}", max: 40}
+                    # the next 108 lines were generated with :r!yamconftags.sh
+                    - map:
+                        conditions:
+                          tag_0_occupied:
+                            map:
+                              conditions:
+                                tag_0_focused: {string: {text: "{tag_0}", <<: *focused}}
+                                ~tag_0_focused: {string: {text: "{tag_0}", <<: *occupied}}
+                          ~tag_0_occupied:
+                            map:
+                              conditions:
+                                tag_0_focused: {string: {text: "{tag_0}", <<: *focused}}
+                                ~tag_0_focused: {string: {text: "{tag_0}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_1_occupied:
+                            map:
+                              conditions:
+                                tag_1_focused: {string: {text: "{tag_1}", <<: *focused}}
+                                ~tag_1_focused: {string: {text: "{tag_1}", <<: *occupied}}
+                          ~tag_1_occupied:
+                            map:
+                              conditions:
+                                tag_1_focused: {string: {text: "{tag_1}", <<: *focused}}
+                                ~tag_1_focused: {string: {text: "{tag_1}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_2_occupied:
+                            map:
+                              conditions:
+                                tag_2_focused: {string: {text: "{tag_2}", <<: *focused}}
+                                ~tag_2_focused: {string: {text: "{tag_2}", <<: *occupied}}
+                          ~tag_2_occupied:
+                            map:
+                              conditions:
+                                tag_2_focused: {string: {text: "{tag_2}", <<: *focused}}
+                                ~tag_2_focused: {string: {text: "{tag_2}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_3_occupied:
+                            map:
+                              conditions:
+                                tag_3_focused: {string: {text: "{tag_3}", <<: *focused}}
+                                ~tag_3_focused: {string: {text: "{tag_3}", <<: *occupied}}
+                          ~tag_3_occupied:
+                            map:
+                              conditions:
+                                tag_3_focused: {string: {text: "{tag_3}", <<: *focused}}
+                                ~tag_3_focused: {string: {text: "{tag_3}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_4_occupied:
+                            map:
+                              conditions:
+                                tag_4_focused: {string: {text: "{tag_4}", <<: *focused}}
+                                ~tag_4_focused: {string: {text: "{tag_4}", <<: *occupied}}
+                          ~tag_4_occupied:
+                            map:
+                              conditions:
+                                tag_4_focused: {string: {text: "{tag_4}", <<: *focused}}
+                                ~tag_4_focused: {string: {text: "{tag_4}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_5_occupied:
+                            map:
+                              conditions:
+                                tag_5_focused: {string: {text: "{tag_5}", <<: *focused}}
+                                ~tag_5_focused: {string: {text: "{tag_5}", <<: *occupied}}
+                          ~tag_5_occupied:
+                            map:
+                              conditions:
+                                tag_5_focused: {string: {text: "{tag_5}", <<: *focused}}
+                                ~tag_5_focused: {string: {text: "{tag_5}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_6_occupied:
+                            map:
+                              conditions:
+                                tag_6_focused: {string: {text: "{tag_6}", <<: *focused}}
+                                ~tag_6_focused: {string: {text: "{tag_6}", <<: *occupied}}
+                          ~tag_6_occupied:
+                            map:
+                              conditions:
+                                tag_6_focused: {string: {text: "{tag_6}", <<: *focused}}
+                                ~tag_6_focused: {string: {text: "{tag_6}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_7_occupied:
+                            map:
+                              conditions:
+                                tag_7_focused: {string: {text: "{tag_7}", <<: *focused}}
+                                ~tag_7_focused: {string: {text: "{tag_7}", <<: *occupied}}
+                          ~tag_7_occupied:
+                            map:
+                              conditions:
+                                tag_7_focused: {string: {text: "{tag_7}", <<: *focused}}
+                                ~tag_7_focused: {string: {text: "{tag_7}", <<: *empty}}
+                    - map:
+                        conditions:
+                          tag_8_occupied:
+                            map:
+                              conditions:
+                                tag_8_focused: {string: {text: "{tag_8}", <<: *focused}}
+                                ~tag_8_focused: {string: {text: "{tag_8}", <<: *occupied}}
+                          ~tag_8_occupied:
+                            map:
+                              conditions:
+                                tag_8_focused: {string: {text: "{tag_8}", <<: *focused}}
+                                ~tag_8_focused: {string: {text: "{tag_8}", <<: *empty}}
+                    - list:
+                        spacing: 3
+                        items:
+                            - string: {text: "{layout}"}
+                            - string: {text: "{appid}", max: 40}
+                            - string: {text: "{selmon}", max: 40}
   center:
     - mem:
         interval: 5000
