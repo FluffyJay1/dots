@@ -157,6 +157,7 @@ while read output; do
     _cycle
     nmons=0
     selmonind=0
+    activetags=0
     continue
   fi
   tokens=( $output ) # (MONITOR INFO x)
@@ -166,27 +167,27 @@ while read output; do
       if [ $selected = 1 ]; then
         selmon=${tokens[0]}
         selmonind=$nmons
-        isactive=true
+        isselmon=true
       else
-        isactive=false
+        isselmon=false
       fi
       nmons=$((nmons + 1))
       ;;
     title) # x = TITLE_OF_FOCUSED_CLIENT...
-      [ $isactive = true ] || continue
+      [ $isselmon = true ] || continue
       title=${tokens[@]:2}
       ;;
     appid) # x = APPID_OF_FOCUSED_CLIENT...
-      [ $isactive = true ] || continue
+      [ $isselmon = true ] || continue
       appid=${tokens[@]:2}
       ;;
     tags) # x = ACTIVE_TAGS SELECTED_TAGS TAGS_OF_FOCUSED_CLIENT URGENT_TAGS
-      [ $isactive = true ] || continue
-      activetags=${tokens[2]}
+      activetags=$((activetags | ${tokens[2]}))
+      [ $isselmon = true ] || continue
       selectedtags=${tokens[3]}
       ;;
     layout) # x = LAYOUT...
-      [ $isactive = true ] || continue
+      [ $isselmon = true ] || continue
       layout=${tokens[@]:2}
       ;;
   esac

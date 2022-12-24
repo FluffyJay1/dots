@@ -167,10 +167,9 @@ bar:
                         items:
                             - string: {text: "{layout}"}
                             - string: {text: "{appid}", max: 40}
-                            - string: {text: "{selmon}", max: 40}
   center:
     - mem:
-        interval: 5000
+        poll-interval: 5000
         content:
           list:
             <<: *modulestyle
@@ -182,17 +181,20 @@ bar:
                     percent_used > 90: {string: {text: "{percent_used}% ", <<: *seriouswarning}}
                     percent_used > 50: {string: {text: "{percent_used}% ", <<: *warning}}
     - cpu:
-        interval: 2000
+        poll-interval: 2000
         content:
-          list:
-            <<: *modulestyle
-            items:
-              - string: {text: , <<: *icon}
-              - map:
-                  default: {string: {text: "{cpu}% "}}
-                  conditions:
-                    cpu > 90: {string: {text: "{cpu}% ", <<: *seriouswarning}}
-                    cpu > 50: {string: {text: "{cpu}% ", <<: *warning}}
+          map:
+            conditions:
+              id == -1:
+                - list:
+                    <<: *modulestyle
+                    items:
+                      - string: {text: , <<: *icon}
+                      - map:
+                          default: {string: {text: "{cpu}% "}}
+                          conditions:
+                            cpu > 90: {string: {text: "{cpu}% ", <<: *seriouswarning}}
+                            cpu > 50: {string: {text: "{cpu}% ", <<: *warning}}
     - network:
         name: wlp2s0
         poll-interval: 2
