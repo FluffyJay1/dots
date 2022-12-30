@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 #
 # dwl-tags.sh - display dwl tags
 # Accepts the output from my fork of dwl (https://github.com/FluffyJay1/dwl)
@@ -75,51 +75,38 @@
 
 monsym='/' # symbol to represent a monitor
 # Variables
-declare output title layout activetags selectedtags appid selmon
-declare -a tags name
 selmonind=0
 nmons=0
 # readonly fname="$HOME"/.cache/dwltags
 fname=/tmp/dwl-tags-pipe
-trap 'rm -f "$fname"' exit
+# do not remove named pipe on exit, breaks things if we e.g. need to restart yambar
+# trap 'rm -f "$fname"' exit
 
 _cycle() {
-  tags=( "1" "2" "3" "4" "5" "6" "7" "8" "9" )
-
-  # Name of tag (optional)
-  # If there is no name, number are used
-  #
-  # Example:
-  #  name=( "" "" "" "Media" )
-  #  -> return "" "" "" "Media" 5 6 7 8 9)
-  name=()
-
   printf -- '%s\n' "nmons|string|$nmons"
   printf -- '%s\n' "selmon|string|${selmon}"
-  for tag in "${!tags[@]}"; do
+  tag=0
+  for tagname in 1 2 3 4 5 6 7 8 9; do # optional: replace with name of tag (e.g. replace 9 with "firefox")
     mask=$((1<<tag))
 
     tag_name="tag"
     # declare "${tag_name}_${tag}" # i have no idea why this line was here
     tagPrefix=${tag_name}_${tag}
 
-    name[tag]="${name[tag]:-${tags[tag]}}"
+    printf -- '%s\n' "${tagPrefix}|string|${tagname}"
 
-    printf -- '%s\n' "${tagPrefix}|string|${name[tag]}"
-
-    if (( "${selectedtags}" & mask )) 2>/dev/null; then
+    if [ "$((selectedtags & mask))" -ne 0 ]; then
       printf -- '%s\n' "${tagPrefix}_focused|bool|true"
-      # printf -- '%s\n' "title|string|${title}" why here
-      # printf -- '%s\n' "appid|string|${appid}"
     else
       printf '%s\n' "${tagPrefix}_focused|bool|false"
     fi
 
-    if (( "${activetags}" & mask )) 2>/dev/null; then
+    if [ "$((activetags & mask))" -ne 0 ]; then
       printf -- '%s\n' "${tagPrefix}_occupied|bool|true"
     else
       printf -- '%s\n' "${tagPrefix}_occupied|bool|false"
     fi
+    tag=$((tag+1))
   done
 
   pre=$(printf %${selmonind}s | tr " " "$monsym")
@@ -137,7 +124,7 @@ _cycle() {
 # Call the function here so the tags are displayed at dwl launch
 # _cycle
 
-while [[ ! -p "${fname}" ]]; do
+while [ ! -p "${fname}" ]; do
   printf -- '%s\n' "You need to redirect dwl stdout to ${fname}" >&2
   sleep 0.2
 done
@@ -160,12 +147,11 @@ while read output; do
     activetags=0
     continue
   fi
-  tokens=( $output ) # (MONITOR INFO x)
-  case ${tokens[1]} in
+  set -- $output # (MONITOR INFO x)
+  case $2 in
     selmon) # x = SELECTED?1/0
-      selected=${tokens[@]:2}
-      if [ $selected = 1 ]; then
-        selmon=${tokens[0]}
+      if [ "$3" = 1 ]; then
+        selmon=$1
         selmonind=$nmons
         isselmon=true
       else
@@ -175,27 +161,26 @@ while read output; do
       ;;
     title) # x = TITLE_OF_FOCUSED_CLIENT...
       [ $isselmon = true ] || continue
-      title=${tokens[@]:2}
+      shift 2
+      title="$@"
       ;;
     appid) # x = APPID_OF_FOCUSED_CLIENT...
       [ $isselmon = true ] || continue
-      appid=${tokens[@]:2}
+      shift 2
+      appid="$@"
       ;;
     tags) # x = ACTIVE_TAGS SELECTED_TAGS TAGS_OF_FOCUSED_CLIENT URGENT_TAGS
-      activetags=$((activetags | ${tokens[2]}))
+      activetags=$((activetags | $3))
       [ $isselmon = true ] || continue
-      selectedtags=${tokens[3]}
+      selectedtags=$4
       ;;
     layout) # x = LAYOUT...
       [ $isselmon = true ] || continue
-      layout=${tokens[@]:2}
+      shift 2
+      layout="$@"
       ;;
   esac
 
 done < $fname
 
 printf -- '%s\n' "exiting dwl-tags.sh" >&2
-
-unset -v output title layout activetags selectedtags selmon
-unset -v tags name
-
