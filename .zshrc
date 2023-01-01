@@ -11,6 +11,7 @@ compinit
 promptinit; prompt gentoo
 
 export EDITOR="/usr/bin/nvim"
+export BROWSER="firefox" # currently required by extract_url
 
 # when entering visual mode, edit line in vim
 autoload edit-command-line; zle -N edit-command-line
@@ -20,6 +21,10 @@ alias vim="nvim"
 alias doasedit="doas nvim"
 alias itop="doas intel_gpu_top"
 alias dgit='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias gc='gcalcli'
+
+setopt HIST_IGNORE_SPACE # commands that start with a space don't get saved in the history
+setopt NO_EQUALS # if a word starts with =, the part after it gets treated as a command, and the word gets substituted with the path to the command
 
 # vi insert mode backspace past start point
 bindkey -v '^?' backward-delete-char
@@ -95,5 +100,3 @@ HISTSIZE=10000
 SAVEHIST=20000
 setopt autocd beep nomatch notify
 # End of lines configured by zsh-newuser-install
-
-setopt HIST_IGNORE_SPACE # commands that start with a space don't get saved in the history

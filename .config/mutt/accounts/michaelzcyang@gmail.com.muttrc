@@ -14,7 +14,9 @@ set spoolfile = +INBOX
 # https://github.com/LukeSmithxyz/mutt-wizard/issues/797
 set postponed = "+[Gmail]/Drafts"
 set trash = "+[Gmail]/Trash"
-set record = +Sent
+# https://superuser.com/questions/224524/sending-mails-via-mutt-and-gmail-duplicates
+set record = "+[Gmail]/Sent Mail"
+set copy = no
 
 macro index o "<shell-escape>mw -y michaelzcyang@gmail.com<enter>" "run mbsync to sync michaelzcyang@gmail.com"
 macro index \eg "<enter-command>unset wait_key<enter><shell-escape>gpg --list-secret-keys; printf 'Enter email ID of user to publish: '; read eID; printf 'Enter fingerprint of GPG key to publish: '; read eFGPT; /usr/libexec/gpg-wks-client --create \$eFGPT \$eID | msmtp --read-envelope-from --read-recipients -a michaelzcyang@gmail.com<enter>"  "publish GPG key to WKS provider"
