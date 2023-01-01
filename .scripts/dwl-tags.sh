@@ -78,9 +78,7 @@ monsym='/' # symbol to represent a monitor
 selmonind=0
 nmons=0
 # readonly fname="$HOME"/.cache/dwltags
-fname=/tmp/dwl-tags-pipe
-# do not remove named pipe on exit, breaks things if we e.g. need to restart yambar
-# trap 'rm -f "$fname"' exit
+fname=/tmp/dwl-status
 
 _cycle() {
   printf -- '%s\n' "nmons|string|$nmons"
@@ -124,63 +122,57 @@ _cycle() {
 # Call the function here so the tags are displayed at dwl launch
 # _cycle
 
-while [ ! -p "${fname}" ]; do
+while [ ! -e "${fname}" ]; do
   printf -- '%s\n' "You need to redirect dwl stdout to ${fname}" >&2
   sleep 0.2
 done
 
-# while true; do
-while read output; do
-
-  # debug print
-  # printf -- '%s\n' "read ${output} from $fname" >&2
-
-  # do not remove pipe after it connects
-  # we do not have the need to facilitate multiple tty sessions
-  # rm -f "${fname}" # do not do this, the pipe still exists, it's just no longer named
-
-  # Get info from the file
-  if [ "$output" = cycle ]; then
-    _cycle
-    nmons=0
-    selmonind=0
-    activetags=0
-    continue
-  fi
-  set -- $output # (MONITOR INFO x)
-  case $2 in
-    selmon) # x = SELECTED?1/0
-      if [ "$3" = 1 ]; then
-        selmon=$1
-        selmonind=$nmons
-        isselmon=true
-      else
-        isselmon=false
-      fi
-      nmons=$((nmons + 1))
-      ;;
-    title) # x = TITLE_OF_FOCUSED_CLIENT...
-      [ $isselmon = true ] || continue
-      shift 2
-      title="$@"
-      ;;
-    appid) # x = APPID_OF_FOCUSED_CLIENT...
-      [ $isselmon = true ] || continue
-      shift 2
-      appid="$@"
-      ;;
-    tags) # x = ACTIVE_TAGS SELECTED_TAGS TAGS_OF_FOCUSED_CLIENT URGENT_TAGS
-      activetags=$((activetags | $3))
-      [ $isselmon = true ] || continue
-      selectedtags=$4
-      ;;
-    layout) # x = LAYOUT...
-      [ $isselmon = true ] || continue
-      shift 2
-      layout="$@"
-      ;;
-  esac
-
-done < $fname
+while true; do
+  nmons=0
+  selmonind=0
+  activetags=0
+  # for some reason you have to read the entire file at once or else it might enter an inconsistent state
+  # because race conditions or something
+  status="$(cat "$fname")"
+  while read line; do
+    set -- $line # (MONITOR INFO x)
+    case $2 in
+      selmon) # x = SELECTED?1/0
+        if [ "$3" = 1 ]; then
+          selmon=$1
+          selmonind=$nmons
+          isselmon=true
+        else
+          isselmon=false
+        fi
+        nmons=$((nmons + 1))
+        ;;
+      title) # x = TITLE_OF_FOCUSED_CLIENT...
+        [ $isselmon = true ] || continue
+        shift 2
+        title="$@"
+        ;;
+      appid) # x = APPID_OF_FOCUSED_CLIENT...
+        [ $isselmon = true ] || continue
+        shift 2
+        appid="$@"
+        ;;
+      tags) # x = ACTIVE_TAGS SELECTED_TAGS TAGS_OF_FOCUSED_CLIENT URGENT_TAGS
+        activetags=$((activetags | $3))
+        [ $isselmon = true ] || continue
+        selectedtags=$4
+        ;;
+      layout) # x = LAYOUT...
+        [ $isselmon = true ] || continue
+        shift 2
+        layout="$@"
+        ;;
+    esac
+  done << EOF
+$status
+EOF
+  _cycle
+  inotifywait -qq --event close_write "$fname"
+done
 
 printf -- '%s\n' "exiting dwl-tags.sh" >&2
