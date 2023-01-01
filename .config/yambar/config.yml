@@ -197,7 +197,7 @@ bar:
                             cpu > 50: {string: {text: "{cpu}% ", <<: *warning}}
     - network:
         name: wlp2s0
-        poll-interval: 2
+        poll-interval: 2000
         content:
           list:
             <<: *modulestyle
@@ -233,7 +233,7 @@ bar:
               - string: {text: "{percent}% "}
     - battery:
         name: BAT1
-        poll-interval: 120
+        poll-interval: 120000 # 2 minutes
         content:
           list:
             <<: *modulestyle
