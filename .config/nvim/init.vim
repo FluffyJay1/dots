@@ -48,7 +48,6 @@ command DoasW w !doas tee % > /dev/null
 " plugin time
 call plug#begin()
 
-Plug 'scrooloose/nerdtree'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -67,21 +66,18 @@ Plug 'gentoo/gentoo-syntax'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+Plug 'ms-jpq/coq_nvim', {'branch': 'coq'} " may need to run COQdeps when updating
 Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'} " may need to run CHADdeps when updating
 
 call plug#end()
 
-" nerdtree
-" \t to open/close NERDTree
-" \f to focus on the NERDTree
+" chadtree
+" \t to open/close CHADTree
 " remap v to vertical split to match ctrlp
-nmap <silent> <leader>t :NERDTreeToggle<CR>
-nmap <silent> <leader>f :NERDTreeFocus<CR>
-let g:NERDTreeMapOpenVSplit='v'
-let g:NERDTreeAutoDeleteBuffer = 1
-let g:NERDTreeDirArrowExpandable = ''
-let g:NERDTreeDirArrowCollapsible = ''
+nmap <silent> <leader>t :CHADopen<CR>
+let g:chadtree_settings = { 'keymap': {'v_split': ['v'], 'h_split': ['x'], 'cut': ['m'] }}
 
 " airblade/vim-gitgutter settings
 " required after having changed the colorscheme
@@ -113,12 +109,32 @@ autocmd User targets#mappings#user call targets#mappings#extend({
       \ 'a': {'argument': [{'o': '[([{]', 'c': '[])}]', 's': ','}]},
       \ })
 
-" mason/lspconfig/coq
+" mason/lspconfig/coq/treesitter
 " IMPORTANT: set up mason first, then lspconfig
-let g:coq_settings = { 'auto_start': 'shut-up' }
 lua << EOF
   require("mason").setup()
   require("mason-lspconfig").setup()
+  require("nvim-treesitter.configs").setup {
+    highlight = {
+      enable = true,
+
+      -- Setting this to true will run `:h syntax` and tree-sitter at the same time.
+      -- Set this to `true` if you depend on 'syntax' being enabled (like for indentation).
+      -- Using this option may slow down your editor, and you may see some duplicate highlights.
+      -- Instead of true it can also be a list of languages
+      additional_vim_regex_highlighting = {"markdown", "make"},
+    },
+    indent = {
+      enable = true,
+    }
+  }
+
+  vim.g.coq_settings = {
+    ["display.pum.fast_close"] = false, -- to reduce flickering or something
+    keymap = {
+      jump_to_mark = "", -- default of c-h conflicts with split switching
+    },
+  }
 
   -- Use an on_attach function to only map the following keys
   -- after the language server attaches to the current buffer
@@ -141,6 +157,10 @@ lua << EOF
     vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, bufopts)
     vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
     vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+
+    -- only run coq for code
+    -- this also speeds up startup time
+    vim.api.nvim_command('COQnow')
   end
 
   -- :h mason-lspconfig-automatic-server-setup
