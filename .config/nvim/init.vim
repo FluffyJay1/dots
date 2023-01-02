@@ -70,13 +70,17 @@ Plug 'ms-jpq/coq_nvim', {'branch': 'coq'} " may need to run COQdeps when updatin
 Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'ms-jpq/chadtree', {'branch': 'chad', 'do': 'python3 -m chadtree deps'} " may need to run CHADdeps when updating
+Plug 'NMAC427/guess-indent.nvim'
 
 call plug#end()
 
 " chadtree
 " \t to open/close CHADTree
-" remap v to vertical split to match ctrlp
+" \f to focus CHADTree
+" remap x to horizontal split and v to vertical split to match ctrlp
+" remap cut(move) from x to m because of conflict also beacuse it make more sense
 nmap <silent> <leader>t :CHADopen<CR>
+nmap <silent> <leader>f :CHADopen --always-focus<CR>
 let g:chadtree_settings = { 'keymap': {'v_split': ['v'], 'h_split': ['x'], 'cut': ['m'] }}
 
 " airblade/vim-gitgutter settings
@@ -102,6 +106,7 @@ let g:airline_right_sep = ''
 let g:airline_right_alt_sep = ''
 let g:airline_symbols.maxlinenr = '並'
 let g:airline_symbols.whitespace = '聾'
+let g:airline#extensions#whitespace#mixed_indent_algo = 2 " allow spaces after tabs for aligning
 
 " targets
 " include {} as open/close for argument
@@ -125,7 +130,7 @@ lua << EOF
       additional_vim_regex_highlighting = {"markdown", "make"},
     },
     indent = {
-      enable = true,
+      enable = false, -- this doesn't work quite right, maybe enable it a later time
     }
   }
 
@@ -180,5 +185,6 @@ lua << EOF
     -- end
   }
 
+  require('guess-indent').setup {}
 EOF
 
