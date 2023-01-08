@@ -6,7 +6,6 @@ gentoo-pipewire-launcher &
 kanshi &
 yambar &
 $HOME/.azotebg &
-foot --server &
 
 # oh man ipc time
 # batch the status output from dwl until "cycle" is encountered, then make a single write to the tmp file
