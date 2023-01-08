@@ -11,7 +11,6 @@ compinit
 promptinit; prompt gentoo
 
 export EDITOR="/usr/bin/nvim"
-export BROWSER="firefox" # currently required by extract_url
 
 # when entering visual mode, edit line in vim
 autoload edit-command-line; zle -N edit-command-line

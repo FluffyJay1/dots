@@ -68,6 +68,8 @@ Programs used:
 - Application launcher: Fuzzel
   - config: ~/.config/fuzzel/fuzzel.ini
     - Uses the Papirus icon theme
+    - requires the TERMINAL env var to be set in order to launch terminal
+      applications this way
   - Fast, also looks nice when stylized
   - Written by the same guy that made foot and yambar
   - Preferred over bemenu because
@@ -180,3 +182,5 @@ Other notes
   - i've also fucked with a bunch of different parts of the system trying to
     get gpu pass through to work and i don't remember exactly what damage i
     caused lol
+- Using neomutt (configured by mutt-wizard) for mail
+  - extract-url (ctrl-b) requires BROWSER env var to be set
