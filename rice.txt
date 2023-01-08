@@ -44,9 +44,8 @@ Programs used:
 - Terminal emulator: foot
   - config: ~/.config/foot/foot.ini
   - Advertised as fast and lightweight
-  - currently configured to use server-client mode
-    - server is started in ~/.scripts/startwl
-    - clients started in dwl's config.h, clifm's clifmrc, and fuzzel's fuzzel.ini
+  - currently configured to not use server-client mode, to make terminal swallowing work
+    - invoked in dwl's config.h, clifm's clifmrc, and fuzzel's fuzzel.ini
   - Preferred over alacritty because
     - It is capable of sending ctrl + tab, ctrl + shift + tab, etc.
     - It has the ability to spawn a new shell with the current working
