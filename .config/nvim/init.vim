@@ -83,6 +83,13 @@ nmap <silent> <leader>t :CHADopen<CR>
 nmap <silent> <leader>f :CHADopen --always-focus<CR>
 let g:chadtree_settings = { 'keymap': {'v_split': ['v'], 'h_split': ['x'], 'cut': ['m'] }}
 
+" git integration bindings (gitgutter/fugitive)
+nnoremap <silent> <leader>gd :Gvdiffsplit<CR>
+nnoremap <leader>gs <Plug>(GitGutterStageHunk)
+nnoremap <leader>gs <Plug>(GitGutterStageHunk)
+nnoremap <leader>gu <Plug>(GitGutterUndoHunk)
+nnoremap <leader>gp <Plug>(GitGutterPreviewHunk)
+
 " airblade/vim-gitgutter settings
 " required after having changed the colorscheme
 hi clear SignColumn
@@ -139,6 +146,11 @@ lua << EOF
     keymap = {
       jump_to_mark = "", -- default of c-h conflicts with split switching
     },
+    clients = {
+      tree_sitter = {
+        enabled = false,
+      },
+    },
   }
 
   -- Use an on_attach function to only map the following keys
@@ -151,7 +163,7 @@ lua << EOF
     vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
     vim.keymap.set('n', 'gh', vim.lsp.buf.hover, bufopts)
     vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+    vim.keymap.set({'n', 'v', 'i'}, '<C-S-Space>', vim.lsp.buf.signature_help, bufopts)
     -- vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, bufopts)
     -- vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, bufopts)
     -- vim.keymap.set('n', '<space>wl', function()
