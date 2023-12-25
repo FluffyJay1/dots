@@ -20,7 +20,6 @@ alias vim="nvim"
 alias doasedit="doas nvim"
 alias itop="doas intel_gpu_top"
 alias dgit='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
-alias gc='gcalcli'
 
 setopt HIST_IGNORE_SPACE # commands that start with a space don't get saved in the history
 setopt NO_EQUALS # if a word starts with =, the part after it gets treated as a command, and the word gets substituted with the path to the command
@@ -47,6 +46,7 @@ export CLIFM_SUDO_CMD="doas"
 c() {
 	\clifm "--cd-on-quit" "$@"
 	dir="$(grep "^\*" "${XDG_CONFIG_HOME:=${HOME}/.config}/clifm/.last" 2>/dev/null | cut -d':' -f2)";
+  echo $dir
 	if [ -d "$dir" ]; then
 		cd -- "$dir" || return 1
 	else
@@ -64,6 +64,18 @@ case $(tty) in
     [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
     ;;
 esac
+
+function settitle () {
+  print -Pn "\e]0;$@\e\\"
+}
+
+function precmd {
+  settitle "zsh%L %(1j,%j job%(2j|s|); ,)%~"
+}
+
+function preexec {
+  settitle "${(q)1}"
+}
 
 # The following lines were added by compinstall
 

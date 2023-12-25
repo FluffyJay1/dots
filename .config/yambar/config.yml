@@ -11,6 +11,7 @@ warning: &warning {foreground: fae9beff}
 seriouswarning: &seriouswarning {foreground: fabed1ff}
 monfocused: &monfocused {foreground: 30cca0ff}
 monunfocused: &monunfocused {foreground: 424850ff}
+windowtitle: &windowtitle {foreground: 424850ff, font: monospace-10}
 
 modulestyle: &modulestyle
   left-margin: 10
@@ -166,7 +167,8 @@ bar:
                         spacing: 3
                         items:
                             - string: {text: "{layout}"}
-                            - string: {text: "{appid}", max: 40}
+                            - string: {text: "{appid}", max: 20}
+                            - string: {text: "{title}", max: 40, <<: *windowtitle}
   center:
     - mem:
         poll-interval: 5000
@@ -174,7 +176,7 @@ bar:
           list:
             <<: *modulestyle
             items:
-              - string: {text: "",<<: *iconfa}
+              - string: {text: "󰌤",<<: *iconfa}
               - map:
                   default: {string: {text: "{percent_used}%"}}
                   conditions:
@@ -243,30 +245,33 @@ bar:
                     ramp:
                       tag: capacity
                       items:
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
+                        - string: {text: 󰁺, <<: *icon}
+                        - string: {text: 󰁻, <<: *icon}
+                        - string: {text: 󰁼, <<: *icon}
+                        - string: {text: 󰁽, <<: *icon}
+                        - string: {text: 󰁾, <<: *icon}
+                        - string: {text: 󰁿, <<: *icon}
+                        - string: {text: 󰂀, <<: *icon}
                         - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
-                        - string: {text: , <<: *icon}
+                        - string: {text: 󰂂, <<: *icon}
+                        - string: {text: 󰁹, <<: *icon}
                   conditions:
-                    state == full: {string: {text: , <<: *icon}}
-                    state == unknown: {string: {text: , <<: *icon}}
+                    state == full: {string: {text: 󱟢, <<: *icon}}
+                    state == unknown: {string: {text: 󰂑, <<: *icon}}
                     state == charging:
                       ramp:
                         tag: capacity
                         items:
-                          - string: {text: , <<: *icon}
-                          - string: {text: , <<: *icon}
-                          - string: {text: , <<: *icon}
-                          - string: {text: , <<: *icon}
-                          - string: {text: , <<: *icon}
-                          - string: {text: , <<: *icon}
-                          - string: {text: , <<: *icon}
+                          - string: {text: 󰢜, <<: *icon}
+                          - string: {text: 󰂆, <<: *icon}
+                          - string: {text: 󰂇, <<: *icon}
+                          - string: {text: 󰂈, <<: *icon}
+                          - string: {text: 󰢝, <<: *icon}
+                          - string: {text: 󰂉, <<: *icon}
+                          - string: {text: 󰢞, <<: *icon}
+                          - string: {text: 󰂊, <<: *icon}
+                          - string: {text: 󰂋, <<: *icon}
+                          - string: {text: 󰂅, <<: *icon}
               - map:
                   default: {string: {text: "{capacity}% "}}
                   conditions:

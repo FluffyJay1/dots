@@ -177,7 +177,7 @@ lua << EOF
 
     -- only run coq for code
     -- this also speeds up startup time
-    vim.api.nvim_command('COQnow')
+    vim.api.nvim_command('COQnow --shut-up')
   end
 
   -- :h mason-lspconfig-automatic-server-setup
