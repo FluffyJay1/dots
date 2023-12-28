@@ -3,7 +3,7 @@
 # depends on wlr-randr, but won't be very useful without wdisplays or kanshi
 
 output=$(
-echo "$(wlr-randr)" | while IFS= read -r line; do
+wlr-randr | while IFS= read -r line; do
   # match [<output name> "<output description>"], convert to [output "<output name>"]
   # outputdesc=$(expr "'$line'" : '[^\s]\+ \(".*"\)')
   outputname=$(expr "$line" : '\([^\s]\+\) ".*"')

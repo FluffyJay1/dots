@@ -25,6 +25,7 @@ bar:
   height: 28
   location: bottom
   background: 0a0f1400 # lol
+  monitor: "REPLACE_WITH_OUTPUT_NAME"
   font: monospace-14
   foreground: 838a90ff
   spacing: 4
@@ -36,20 +37,22 @@ bar:
   left:
     - script:
         path: /home/fluffyjay1/.scripts/dwl-tags.sh
-        args: [1]
+        args: ["REPLACE_WITH_OUTPUT_NAME"]
         content:
           list:
             items:
               - map:
                   conditions:
                     nmons > 1:
-                      list:
-                        spacing: 0
+                      map:
                         <<: *modulestyle
-                        items:
-                          - string: {text: "{premons}", <<: *monunfocused}
-                          - string: {text: "{monsym}", <<: *monfocused}
-                          - string: {text: "{postmons}", <<: *monunfocused}
+                        conditions:
+                          selmonrelative > 0:
+                            string: {text: "󰅂", <<: *monunfocused}
+                          selmonrelative < 0:
+                            string: {text: "󰅁", <<: *monunfocused}
+                        default:
+                          string: {text: "󰶼", <<: *monfocused}
               - list:
                   margin: 10
                   <<: *modulestyle

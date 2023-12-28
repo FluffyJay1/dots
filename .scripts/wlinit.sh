@@ -4,7 +4,7 @@ fname=/tmp/dwl-status
 
 gentoo-pipewire-launcher &
 kanshi &
-yambar &
+yambarinit.sh
 $HOME/.azotebg &
 
 # oh man ipc time

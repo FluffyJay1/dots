@@ -3,11 +3,11 @@
 # dwl-tags.sh - display dwl tags
 # Accepts the output from my fork of dwl (https://github.com/FluffyJay1/dwl)
 #
-# USAGE: dwl-tags.sh 1
+# USAGE: dwl-tags.sh <monitor name>
 #
 # REQUIREMENTS:
 #  - inotifywait ( 'inotify-tools' on arch )
-#  - Launch dwl with `dwl > ~.cache/dwltags` or change $fname
+#  - Launch dwl with `dwl > /tmp/dwl-status` or change $fname
 #
 # TAGS:
 #  Name              Type    Return
@@ -26,7 +26,7 @@
 #
 #     - script:
 #         path: /absolute/path/to/dwl-tags.sh
-#         args: [1]
+#         args: ["monitor_name"]
 #         anchors:
 #           - occupied: &occupied {foreground: 57bbf4ff}
 #           - focused: &focused {foreground: fc65b0ff}
@@ -79,10 +79,10 @@ selmonind=0
 nmons=0
 # readonly fname="$HOME"/.cache/dwltags
 fname=/tmp/dwl-status
+monname=$1
 
 _cycle() {
   printf -- '%s\n' "nmons|string|$nmons"
-  printf -- '%s\n' "selmon|string|${selmon}"
   tag=0
   for tagname in 1 2 3 4 5 6 7 8 9; do # optional: replace with name of tag (e.g. replace 9 with "firefox")
     mask=$((1<<tag))
@@ -107,9 +107,7 @@ _cycle() {
     tag=$((tag+1))
   done
 
-  pre=$(printf %${selmonind}s | tr " " "$monsym")
-  post=$(printf %$((nmons - selmonind - 1))s | tr " " "$monsym")
-  printf -- '%s\n' "premons|string|$pre"
+  printf -- '%s\n' "selmonrelative|int|$((selmonind - curmonind))"
   printf -- '%s\n' "monsym|string|$monsym"
   printf -- '%s\n' "postmons|string|$post"
 
@@ -138,32 +136,32 @@ while true; do
     set -- $line # (MONITOR INFO x)
     case $2 in
       selmon) # x = SELECTED?1/0
+        if [ $1 = $monname ] ; then
+          curmonind=$nmons
+        fi
         if [ "$3" = 1 ]; then
           selmon=$1
           selmonind=$nmons
-          isselmon=true
-        else
-          isselmon=false
         fi
         nmons=$((nmons + 1))
         ;;
       title) # x = TITLE_OF_FOCUSED_CLIENT...
-        [ $isselmon = true ] || continue
+        [ $1 = $monname ] || continue
         shift 2
         title="$@"
         ;;
       appid) # x = APPID_OF_FOCUSED_CLIENT...
-        [ $isselmon = true ] || continue
+        [ $1 = $monname ] || continue
         shift 2
         appid="$@"
         ;;
       tags) # x = ACTIVE_TAGS SELECTED_TAGS TAGS_OF_FOCUSED_CLIENT URGENT_TAGS
-        activetags=$((activetags | $3))
-        [ $isselmon = true ] || continue
+        [ $1 = $monname ] || continue
+        activetags=$3
         selectedtags=$4
         ;;
       layout) # x = LAYOUT...
-        [ $isselmon = true ] || continue
+        [ $1 = $monname ] || continue
         shift 2
         layout="$@"
         ;;
